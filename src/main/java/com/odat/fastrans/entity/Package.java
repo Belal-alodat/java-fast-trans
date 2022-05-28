@@ -27,11 +27,15 @@ public class Package {
 	private double weight;
 	private int pieces;
 	 
-	public Package(Product product, Dimension dimension, double totalPrice) {
+	@ManyToOne
+	private Supplier supplier;
+	public Package(Product product, Dimension dimension, double totalPrice,double weight,int pieces) {
 		super();
 		this.product = product;
 		this.dimension = dimension;
 		this.price = totalPrice;
+		this.pieces= pieces;
+		this.weight = weight;
 	}
 	 
 

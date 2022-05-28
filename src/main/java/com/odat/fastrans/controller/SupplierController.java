@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.odat.fastrans.dto.AddressDTO;
 import com.odat.fastrans.dto.CityDTO;
 import com.odat.fastrans.dto.LoginCredentialsDTO;
+import com.odat.fastrans.dto.PackageDTO;
 import com.odat.fastrans.dto.ShipmentDTO;
 import com.odat.fastrans.dto.SupplierDTO;
 import com.odat.fastrans.dto.TownDTO;
@@ -49,8 +51,12 @@ public class SupplierController {
 		return s;
 	}
 	@GetMapping("/addresses")
-	public ResponseEntity<List<AddressDTO>> getAddressBySupplierAndIsFavourite (){
-		List<Address> addresses = supplierService.getAddressBySupplierAndIsFavourite ( );
+	public ResponseEntity<List<AddressDTO>> getAddressBySupplierAndIsFavourite (@RequestParam(name="type",required = false) String type   ){
+	  boolean isFromAddress = false;
+		if("from".equalsIgnoreCase(type)) {
+			isFromAddress = true;
+		}
+		List<Address> addresses = supplierService.getAddressBySupplierAndFavouriteAndFromAddress (isFromAddress );
 		
 		List<AddressDTO> addressesDto = addresses.stream().map(
 		        address -> new AddressDTO(address)
@@ -58,6 +64,19 @@ public class SupplierController {
 		
 		return  new ResponseEntity<List<AddressDTO>>(addressesDto,HttpStatus.OK);
 
+	}
+	
+	
+	@PostMapping("/addresses")
+	public ResponseEntity<Void> saveAddresses(@RequestBody AddressDTO addressDTO) {
+		supplierService.saveAddresses(addressDTO);
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/packages")
+	public ResponseEntity<Void> savePackage(@RequestBody PackageDTO packageDTO) {
+		supplierService.savePackage(packageDTO);
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/shipments")

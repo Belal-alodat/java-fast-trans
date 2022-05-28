@@ -23,21 +23,25 @@ public class Address {
 	private Town town;
 	@OneToOne
 	private Village village;
+	
 	private String street;
 	private int buildingNumber;
 	private String mobile;
 	private String fullName;
+	
 	private double latitude, longitude;
-	private boolean isFavourite;
+	private boolean favourite;
+	private boolean fromAddress;
 	@ManyToOne
 	private Supplier supplier;
-	public Address(City city, Town town, Village village, String mobile,boolean isFavourite) {
+	public Address(City city, Town town, Village village, String mobile,boolean favourite,boolean fromAddress) {
 		super();
 		this.city = city;
 		this.town = town;
 		this.village = village;
 		this.mobile = mobile;
-		this.isFavourite = isFavourite;
+		this.favourite = favourite;
+		this.fromAddress=fromAddress;
 	}
 
 }

@@ -76,7 +76,7 @@ public class SupplierService {
 		return s.get();
 	}
 
-	private Package savePackage(Supplier supplier, PackageDTO packageDTO) {
+	public Package savePackage(Supplier supplier, PackageDTO packageDTO) {
 		Optional<Product> productOptional = productRepo.findById(packageDTO.getProductName().getId());
 		if (productOptional.isEmpty()) {
 			throw new NoSuchElementException("Product not found");
@@ -90,7 +90,8 @@ public class SupplierService {
 		Dimension dim = dimensionOptional.get();
 		// Dimension dim = null;
 
-		Package pakage = new Package(product, dim, packageDTO.getPrice());
+		Package pakage = new Package(product, dim, packageDTO.getPrice(),packageDTO.getWeight(),packageDTO.getPieces());
+		pakage.setSupplier(supplier);
 		pakage = packageRepo.save(pakage);
 
 		return pakage;
@@ -107,7 +108,7 @@ public class SupplierService {
 		AddressDTO add =	new AddressDTO(1, new CityDTO(), new TownDTO(-1,""),
 				new VillageDTO(-1,""), 
 				"mobile","street",buildingNumber,
-				"fullName",latitude, longitude, false);
+				"fullName",latitude, longitude, false, false);
 		shipmentDTO.setFromAddress(add);
 		shipmentDTO.setToAddress(add);
 		PackageDTO packagedetails = new PackageDTO();
@@ -130,14 +131,14 @@ public class SupplierService {
 	} 
 	
 	
-	public List<Address> getAddressBySupplierAndIsFavourite () {
+	public List<Address> getAddressBySupplierAndFavouriteAndFromAddress (boolean isFromAddress) {
 		
 		Optional<Supplier> supplierOptinal = supplierRepo.findByAccount(getAccount());
 		if (supplierOptinal.isEmpty()) {
 			throw new NoSuchElementException("Supplier not found");
 		}
 		 Supplier supplier =supplierOptinal.get();
-		return addressRepo.findAllBySupplierAndIsFavourite(supplier ,true);
+		return addressRepo.findAllBySupplierAndFavouriteAndFromAddress(supplier ,true,isFromAddress);
 	}
 	
 	public Shipment saveShipments(ShipmentDTO shipmentDTO) {
@@ -148,9 +149,12 @@ public class SupplierService {
 		}
 
 		Supplier supplier = supplierOptinal.get();
+		shipmentDTO.getFromAddress().setFavourite(false);		
 		Address fromAddress = saveAddress(shipmentDTO.getFromAddress(),supplier);
+		shipmentDTO.getToAddress().setFavourite(false);
 		Address toAddress = saveAddress(shipmentDTO.getToAddress(),supplier);
-		Package pakage = savePackage(supplier, shipmentDTO.getPackageDetails());
+		 
+		Package pakage = savePackage(null, shipmentDTO.getPackageDetails());
 		Shipment shipment = new Shipment(supplier,fromAddress, toAddress, shipmentDTO.getPickupDate(),
 				shipmentDTO.getPickupTime(), pakage);
 
@@ -202,7 +206,7 @@ public class SupplierService {
 			
 			address = new Address(cityOptional.get(), townOptional.get(), villageOptional.get(),
 					addressDTO.getMobile(),
-					addressDTO.isFavourite());
+					addressDTO.isFavourite(),addressDTO.isFromAddress());
 			
 			if(addressDTO.isFavourite()) address.setSupplier(supplier);
 			
@@ -211,6 +215,7 @@ public class SupplierService {
 			address.setLatitude(addressDTO.getLatitude());
 			address.setLongitude(addressDTO.getLongitude());
 			address.setStreet(addressDTO.getStreet());
+			address.setFromAddress(addressDTO.isFromAddress());
 			address = addressRepo.save(address);
 		} else {
 			Optional<Address> addressOptional = addressRepo.findById(addressDTO.getId());
@@ -220,5 +225,27 @@ public class SupplierService {
 			address = addressOptional.get();
 		}
 		return address;
+	}
+
+	public Address saveAddresses(AddressDTO addressDTO) {
+		Optional<Supplier> supplierOptinal = supplierRepo.findByAccount(getAccount());
+		if (supplierOptinal.isEmpty()) {
+			throw new NoSuchElementException("Supplier not found");
+		}
+
+		Supplier supplier = supplierOptinal.get();
+		return  saveAddress(addressDTO,supplier);
+		
+	}
+	
+	public Package savePackage(PackageDTO packageDTO) {
+		Optional<Supplier> supplierOptinal = supplierRepo.findByAccount(getAccount());
+		if (supplierOptinal.isEmpty()) {
+			throw new NoSuchElementException("Supplier not found");
+		}
+
+		Supplier supplier = supplierOptinal.get();
+		return  savePackage(supplier,packageDTO);
+		
 	}
 }
