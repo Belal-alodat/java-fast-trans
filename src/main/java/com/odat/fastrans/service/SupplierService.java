@@ -27,6 +27,7 @@ import com.odat.fastrans.entity.Dimension;
 import com.odat.fastrans.entity.Package;
 import com.odat.fastrans.entity.Product;
 import com.odat.fastrans.entity.Shipment;
+import com.odat.fastrans.entity.ShipmentStatus;
 import com.odat.fastrans.entity.Supplier;
 import com.odat.fastrans.entity.Town;
 import com.odat.fastrans.entity.Village;
@@ -37,6 +38,7 @@ import com.odat.fastrans.repo.DimensionRepo;
 import com.odat.fastrans.repo.PackageRepo;
 import com.odat.fastrans.repo.ProductRepo;
 import com.odat.fastrans.repo.ShipmentRepo;
+import com.odat.fastrans.repo.ShipmentStatusRepo;
 import com.odat.fastrans.repo.SupplierRepo;
 import com.odat.fastrans.repo.TownRepo;
 import com.odat.fastrans.repo.VillageRepo;
@@ -58,10 +60,11 @@ public class SupplierService {
 	final private ShipmentRepo shipmentRepo;
 	final private AddressRepo addressRepo;
 	final private PasswordEncoder passwordEncoder;
-
+	final private ShipmentStatusRepo shipmentStatusRepo;
 	public Account getAccount() {
-		String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Object principle = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+		String email = ((org.springframework.security.core.userdetails.User) principle).getUsername();
 		Account account = accountRepo.findByEmail(email).get();
 
 		return account;
@@ -71,13 +74,23 @@ public class SupplierService {
 
 		Optional<Supplier> s = supplierRepo.findByAccount(getAccount());
 		PackageDTO x = new PackageDTO();
-		x.setProductName(new ProductDTO());
+		x.setProduct(new ProductDTO());
 		x.setDimension(new DimensionDTO());
 		return s.get();
 	}
+	public Package savePackage(PackageDTO packageDTO) {
+		Optional<Supplier> supplierOptinal = supplierRepo.findByAccount(getAccount());
+		if (supplierOptinal.isEmpty()) {
+			throw new NoSuchElementException("Supplier not found");
+		}
 
+		Supplier supplier = supplierOptinal.get();
+		return  savePackage(supplier,packageDTO);
+		
+	}
+	
 	public Package savePackage(Supplier supplier, PackageDTO packageDTO) {
-		Optional<Product> productOptional = productRepo.findById(packageDTO.getProductName().getId());
+		Optional<Product> productOptional = productRepo.findById(packageDTO.getProduct().getId());
 		if (productOptional.isEmpty()) {
 			throw new NoSuchElementException("Product not found");
 		}
@@ -108,12 +121,12 @@ public class SupplierService {
 		AddressDTO add =	new AddressDTO(1, new CityDTO(), new TownDTO(-1,""),
 				new VillageDTO(-1,""), 
 				"mobile","street",buildingNumber,
-				"fullName",latitude, longitude, false, false);
+				"fullName", latitude, longitude, /* false, */ false);
 		shipmentDTO.setFromAddress(add);
 		shipmentDTO.setToAddress(add);
 		PackageDTO packagedetails = new PackageDTO();
 		packagedetails.setDimension(new DimensionDTO());
-		packagedetails.setProductName(new ProductDTO());
+		packagedetails.setProduct(new ProductDTO());
 		shipmentDTO.setPackageDetails(packagedetails );
 		return shipmentDTO;
 	} 
@@ -131,14 +144,14 @@ public class SupplierService {
 	} 
 	
 	
-	public List<Address> getAddressBySupplierAndFavouriteAndFromAddress (boolean isFromAddress) {
+	public List<Address> getAddressBySupplierAndFromAddress (boolean isFromAddress) {
 		
 		Optional<Supplier> supplierOptinal = supplierRepo.findByAccount(getAccount());
 		if (supplierOptinal.isEmpty()) {
 			throw new NoSuchElementException("Supplier not found");
 		}
 		 Supplier supplier =supplierOptinal.get();
-		return addressRepo.findAllBySupplierAndFavouriteAndFromAddress(supplier ,true,isFromAddress);
+		return addressRepo.findAllBySupplierAndFromAddress(supplier,isFromAddress);
 	}
 	
 	public Shipment saveShipments(ShipmentDTO shipmentDTO) {
@@ -149,14 +162,21 @@ public class SupplierService {
 		}
 
 		Supplier supplier = supplierOptinal.get();
-		shipmentDTO.getFromAddress().setFavourite(false);		
-		Address fromAddress = saveAddress(shipmentDTO.getFromAddress(),supplier);
-		shipmentDTO.getToAddress().setFavourite(false);
-		Address toAddress = saveAddress(shipmentDTO.getToAddress(),supplier);
+		//shipmentDTO.getFromAddress().setFavourite(false);		
+		Address fromAddress = saveAddress(shipmentDTO.getFromAddress(),null);
+		//shipmentDTO.getToAddress().setFavourite(false);
+		Address toAddress = saveAddress(shipmentDTO.getToAddress(),null);
 		 
 		Package pakage = savePackage(null, shipmentDTO.getPackageDetails());
+		
+		Optional<ShipmentStatus> shipmentStatusOptional = shipmentStatusRepo.findById(1L);
+		if (shipmentStatusOptional.isEmpty()) {
+			throw new NoSuchElementException("shipmentStatus not found");
+		}
+		ShipmentStatus shipmentStatus = shipmentStatusOptional.get();
+		
 		Shipment shipment = new Shipment(supplier,fromAddress, toAddress, shipmentDTO.getPickupDate(),
-				shipmentDTO.getPickupTime(), pakage);
+				shipmentDTO.getPickupTime(), pakage,shipmentStatus);
 
 		shipmentRepo.save(shipment);
 
@@ -168,7 +188,7 @@ public class SupplierService {
 		LoginCredentialsDTO loginCredentials = supplierDTO.getCredentials();
 		String encodedPass = passwordEncoder.encode(loginCredentials.getPassword());
 		Account account = new Account(loginCredentials.getMobile(), loginCredentials.getEmail(), encodedPass,
-				loginCredentials.getFullName(), 1);
+				loginCredentials.getFullName(), 1,"USER");
 
 		account = accountRepo.save(account);
 
@@ -179,6 +199,7 @@ public class SupplierService {
 		return supplier;
 	}
 
+	 
 	private Address saveAddress(AddressDTO addressDTO,Supplier supplier) {
 		long cityId = addressDTO.getCity().getId();
 		long townId = addressDTO.getTown().getId();
@@ -206,9 +227,10 @@ public class SupplierService {
 			
 			address = new Address(cityOptional.get(), townOptional.get(), villageOptional.get(),
 					addressDTO.getMobile(),
-					addressDTO.isFavourite(),addressDTO.isFromAddress());
+					/*addressDTO.isFavourite(),*/addressDTO.isFromAddress());
 			
-			if(addressDTO.isFavourite()) address.setSupplier(supplier);
+			//if(addressDTO.isFavourite()) 
+			address.setSupplier(supplier);
 			
 			address.setBuildingNumber(addressDTO.getBuildingNumber());
 			address.setFullName(addressDTO.getFullName());
@@ -237,15 +259,15 @@ public class SupplierService {
 		return  saveAddress(addressDTO,supplier);
 		
 	}
-	
-	public Package savePackage(PackageDTO packageDTO) {
+
+	public List<Package> getPackagesBySupplier() {
 		Optional<Supplier> supplierOptinal = supplierRepo.findByAccount(getAccount());
 		if (supplierOptinal.isEmpty()) {
 			throw new NoSuchElementException("Supplier not found");
 		}
-
-		Supplier supplier = supplierOptinal.get();
-		return  savePackage(supplier,packageDTO);
-		
+		 Supplier supplier =supplierOptinal.get();
+		return packageRepo.findAllBySupplier(supplier);
 	}
+	
+	
 }

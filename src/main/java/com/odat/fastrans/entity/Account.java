@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class Account {
 	
 	public static Account getDefault() {
-		 Account account = new Account("96656","a@a", "password","name", 1);
+		 Account account = new Account("96656","a@a", "password","name", 1,"");
 		 account.setId(-1);
 		 return account;
 	}
@@ -32,15 +32,21 @@ public class Account {
 	private int active;
 	private String fullName;
 	private String mobile; 
+	private String roleName;
 	
 	 
 	 
-	public Account(String mobile,String email, String password,String fullName, int active) {
+	public Account(String mobile,String email, String password,String fullName, int active,String roleName ) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.active = active;
 		this.mobile = mobile;
 		this.fullName = fullName;
+		this.roleName=roleName;
 	}
+
+
+
+	
 }

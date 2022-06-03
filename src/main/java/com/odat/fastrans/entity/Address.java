@@ -30,17 +30,18 @@ public class Address {
 	private String fullName;
 	
 	private double latitude, longitude;
-	private boolean favourite;
+	//private boolean favourite;
 	private boolean fromAddress;
 	@ManyToOne
 	private Supplier supplier;
-	public Address(City city, Town town, Village village, String mobile,boolean favourite,boolean fromAddress) {
+
+	public Address(City city, Town town, Village village, String mobile/* ,boolean favourite */,boolean fromAddress) {
 		super();
 		this.city = city;
 		this.town = town;
 		this.village = village;
 		this.mobile = mobile;
-		this.favourite = favourite;
+	//	this.favourite = favourite;
 		this.fromAddress=fromAddress;
 	}
 

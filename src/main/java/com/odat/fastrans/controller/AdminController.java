@@ -26,37 +26,43 @@ import com.odat.fastrans.repo.VillageRepo;
 @RequestMapping("/admin")
 public class AdminController {
 	
-private final VillageRepo villageٌRepo;
+private final VillageRepo villageRepo;
 private final TownRepo townRepo;
 private final CityRepo cityRepo;
 private final AddressRepo addressRepo;
 private final AccountRepo accountRepo;
+ 
 
 
 	
 	
-	public AdminController(AccountRepo accountRepo,AddressRepo addressRepo,CityRepo cityRepo,TownRepo townRepo,VillageRepo villageٌRepo) {
+	public AdminController(AccountRepo accountRepo,AddressRepo addressRepo,
+			CityRepo cityRepo,TownRepo townRepo,VillageRepo villageRepo) {
 		super();
-		this.villageٌRepo = villageٌRepo;
+		this.villageRepo = villageRepo;
 		this.townRepo = townRepo;
 		this.cityRepo=cityRepo;
 		this.addressRepo=addressRepo;
 		this.accountRepo=accountRepo;
+		 
 	}
-	@GetMapping("/villageٌs")
+	@GetMapping("/villages")
 	public ResponseEntity<List<Village>> getVillages(){
-		return ResponseEntity.ok(villageٌRepo.findAll());
+		return ResponseEntity.ok(villageRepo.findAll());
 	}
 	
-	@PostMapping("/villageٌs")
+	 
+	
+	
+	@PostMapping("/villages")
 	public ResponseEntity<Void> postVillages(@RequestBody List<Village> villages){
-		villageٌRepo.saveAll(villages);
+		villageRepo.saveAll(villages);
 		return new ResponseEntity<Void>( HttpStatus.CREATED );
 	}
 	
 	
-	@GetMapping("/citieٌs")
-	public ResponseEntity<List<City>> getCitieٌs(){
+	@GetMapping("/cities")
+	public ResponseEntity<List<City>> getCities(){
 		return ResponseEntity.ok(cityRepo.findAll());
 	}
 	
@@ -82,12 +88,12 @@ private final AccountRepo accountRepo;
 		return ResponseEntity.ok(addressRepo.findAll());
 	}
 	 
-	@PostMapping("/citieٌs")
-	public ResponseEntity<Void> postCitieٌs(@RequestBody List<City> citieٌs){
-		for(City city: citieٌs) {
-			Town.assignCitieٌs(city);
+	@PostMapping("/cities")
+	public ResponseEntity<Void> postCities(@RequestBody List<City> cities){
+		for(City city: cities) {
+			Town.assignCities(city);
 		}
-		cityRepo.saveAll(citieٌs);
+		cityRepo.saveAll(cities);
 		return new ResponseEntity<Void>( HttpStatus.CREATED );
 	}
 	
@@ -95,7 +101,7 @@ private final AccountRepo accountRepo;
 	
 	
 	@GetMapping("/towns")
-	public ResponseEntity<List<Town>> getTownٌs(){
+	public ResponseEntity<List<Town>> getTowns(){
 		return ResponseEntity.ok(townRepo.findAll());
 	}
 	
@@ -123,7 +129,7 @@ private final AccountRepo accountRepo;
 	@GetMapping("/vi")
 	public ResponseEntity<Village> getVillage(){
 		Village v=	new Village("a","d",null);
-		villageٌRepo.save(v);
+		villageRepo.save(v);
 		return ResponseEntity.ok(v);
 	}
 }

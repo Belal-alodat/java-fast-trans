@@ -21,13 +21,14 @@ import lombok.NoArgsConstructor;
 public class Shipment {
 	
 	public Shipment(Supplier supplier,Address fromAddress, Address toAddress, Date pickupDate,
-			Time pickupTime, Package pakage) {
+			Time pickupTime, Package pakage,ShipmentStatus shipmentStatus) {
 		this.supplier=supplier;
 		this.fromAddress = fromAddress;
 		this.toAddress = toAddress;
 		this.pickupDate = pickupDate;
 		this.pickupTime = pickupTime;
 		this.pakage = pakage;
+		this.shipmentStatus = shipmentStatus; 
 
 	}
 

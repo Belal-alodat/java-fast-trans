@@ -55,7 +55,7 @@ public class Town {
 		this.city = city;
 	}
 	 
-	public static void assignCitieٌs(City city) {
+	public static void assignCities(City city) {
 		List<Town>  towns = city.getTowns();
 		 for (Town town: towns) {
 			 town.setCity(city);

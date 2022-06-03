@@ -19,28 +19,30 @@ public class Driver {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;	
-	private String fullName;
-	private String mobile;
+	
 	@OneToOne
 	private Account account;
 	@OneToMany(
 		    mappedBy = "driver"
 		    
 		)
-	private List<DriverPikedShipment> pickedPackages;
+	private List<DriverShipment> pickedPackages;
 	@OneToMany(
+			  mappedBy = "driver"
 		)
 	private List<DriverDelveryShipment> delveryPackages;
 	 
  
-	public Driver(String fullName, String mobile, Account account, List<DriverPikedShipment> pickedPackages,
+	public Driver( Account account, List<DriverShipment> pickedPackages,
 			List<DriverDelveryShipment> delveryPackages) {
-		super();
-		this.fullName = fullName;
-		this.mobile = mobile;
+		super();	
 		this.account = account;
 		this.pickedPackages = pickedPackages;
 		this.delveryPackages = delveryPackages;
 	}
-	
+	public Driver( Account account) {
+		super();	
+		this.account = account;
+		 
+	}
 }

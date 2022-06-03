@@ -66,7 +66,7 @@ public class UserController {
 	public PackageDTO getPackageDTO() {
 
 		PackageDTO x = new PackageDTO();
-		x.setProductName(new ProductDTO());
+		x.setProduct(new ProductDTO());
 		x.setDimension(new DimensionDTO());
 		return x;
 	}

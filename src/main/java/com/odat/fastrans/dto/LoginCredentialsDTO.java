@@ -14,4 +14,5 @@ public class LoginCredentialsDTO {
     private String password;
     private String fullName;
 	private String mobile; 
+	private String roleName;
 }

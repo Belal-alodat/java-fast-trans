@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.odat.fastrans.entity.ShipmentStatus;
 
-public interface PackageStatusRepo extends JpaRepository<ShipmentStatus, Long>{
+public interface ShipmentStatusRepo extends JpaRepository<ShipmentStatus, Long>{
 
 }

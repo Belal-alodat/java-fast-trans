@@ -1,6 +1,6 @@
 package com.odat.fastrans.security;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
+//import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +24,7 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+    	/*
         String authHeader = request.getHeader("Authorization");
         if(authHeader != null && !authHeader.isBlank() && authHeader.startsWith("Bearer ")){
             String jwt = authHeader.substring(7);
@@ -43,7 +44,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 }
             }
         }
-
+*/
         filterChain.doFilter(request, response);
     }
 }

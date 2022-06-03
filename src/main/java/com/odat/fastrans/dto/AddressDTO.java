@@ -23,7 +23,7 @@ public class AddressDTO {
 		  this.fullName=address.getFullName();
 		  this.latitude=address.getLatitude();
 		  this.longitude=address.getLongitude();
-		  this.favourite=address.isFavourite();
+		 // this.favourite=address.isFavourite();
 		  this.fromAddress=address.isFromAddress();
 	}
 	private long id =-1;
@@ -37,7 +37,7 @@ public class AddressDTO {
 	private int buildingNumber;
 	private String fullName;
 	private double latitude, longitude;
-	private boolean favourite;
+	//private boolean favourite;
 	private boolean fromAddress;
  
 }

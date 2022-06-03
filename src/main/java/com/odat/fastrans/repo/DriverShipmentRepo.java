@@ -2,8 +2,8 @@ package com.odat.fastrans.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.odat.fastrans.entity.DriverPikedShipment;
+import com.odat.fastrans.entity.DriverShipment;
 
-public interface DriverPikedPackageRepo extends  JpaRepository<DriverPikedShipment, Long>{
+public interface DriverShipmentRepo extends  JpaRepository<DriverShipment, Long>{
 
 }

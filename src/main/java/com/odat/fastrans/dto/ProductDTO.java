@@ -13,9 +13,10 @@ public class ProductDTO {
 	public ProductDTO(Product product) {
 		this.id = product.getId();
 		this.name= product.getName();
+		this.description = product.getDescription();
 		 
 	}
 	private long id;
-	private String name;
-	 
+	private String description;
+	private String name; 
 }
