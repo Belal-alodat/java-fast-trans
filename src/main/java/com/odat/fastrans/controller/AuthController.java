@@ -3,6 +3,7 @@ package com.odat.fastrans.controller;
 import java.util.Collections;
 import java.util.Map;
 
+import com.odat.fastrans.dto.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
@@ -66,7 +67,7 @@ public class AuthController {
 
     @PostMapping("/login")
     
-    public ResponseEntity<Map<String, Object>> loginHandler(@RequestBody LoginCredentialsDTO body){
+    public ResponseEntity<LoginResponse> loginHandler(@RequestBody LoginCredentialsDTO body){
         try {
             UsernamePasswordAuthenticationToken authInputToken =
                     new UsernamePasswordAuthenticationToken(body.getEmail(), body.getPassword());
@@ -74,7 +75,7 @@ public class AuthController {
             final Authentication authentication =  authManager.authenticate(authInputToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
            // String token = jwtUtil.generateTokenX(authentication);
-            final String token = jwtTokenUtil.generateToken(authentication);
+            final LoginResponse loginResponse = jwtTokenUtil.generateToken(authentication);
             
 			/*
 			 * final Authentication authentication = authenticationManager.authenticate( new
@@ -83,7 +84,7 @@ public class AuthController {
 			 * SecurityContextHolder.getContext().setAuthentication(authentication);
 			 */
 
-            return ResponseEntity.ok(Collections.singletonMap("jwt-token", token));
+            return ResponseEntity.ok(loginResponse);
         }catch (AuthenticationException authExc){
         	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

@@ -21,6 +21,7 @@ public class ShipmentDTO {
 		this.pickupDate = shipment.getPickupDate();
 		this.pickupTime = shipment.getPickupTime();
 		this.id = shipment.getId();
+		this.status = shipment.getShipmentStatus().getId();
 		
 	}
 	private long id;
@@ -29,5 +30,6 @@ public class ShipmentDTO {
     private PackageDTO packageDetails;
     private Date pickupDate;
     private Time pickupTime;
+	private long status;
     
 }

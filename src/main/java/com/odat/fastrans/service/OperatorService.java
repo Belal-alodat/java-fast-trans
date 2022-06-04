@@ -94,9 +94,10 @@ public class OperatorService {
 		DriverShipment driverShipment = new DriverShipment(shipment , driver, shipmentStatus) ;
 		driverShipmentRepo.saveAndFlush(driverShipment);
 		 
-	} 
-	
-	
+	}
+
+
+
 	
 	
 }

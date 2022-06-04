@@ -1,9 +1,13 @@
 package com.odat.fastrans.repo;
 
+import com.odat.fastrans.entity.Account;
+import com.odat.fastrans.entity.Supplier;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.odat.fastrans.entity.Driver;
 
-public interface DriverRepo  extends JpaRepository<Driver, Long>{
+import java.util.Optional;
 
+public interface DriverRepo  extends JpaRepository<Driver, Long>{
+    public Optional<Driver> findByAccount(Account accouint);
 }

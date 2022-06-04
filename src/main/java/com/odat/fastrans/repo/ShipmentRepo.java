@@ -8,10 +8,23 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.odat.fastrans.entity.Shipment;
 import com.odat.fastrans.entity.ShipmentStatus;
 import com.odat.fastrans.entity.Supplier;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ShipmentRepo  extends JpaRepository<Shipment, Long>{
 	
 	public Optional<List<Shipment>> findAllBySupplier(Supplier supplier);
 	public Optional<List<Shipment>> findAllByShipmentStatus(ShipmentStatus shipmentStatus);
+	public Optional<List<Shipment>> findAllBySupplierAndShipmentStatus(Supplier supplier,ShipmentStatus shipmentStatus);
+	//public Optional<List<Shipment>> findAllBySupplierAndShipmentStatus(Supplier supplier,ShipmentStatus shipmentStatus);
+
+
+
+	@Query(value = "select sh.* FROM  shipment as sh  ,  driver_shipment  as dr " +
+			"where sh.id = dr.shipment_id and  sh.shipment_status_id =dr.shipment_status_id and " +
+			" dr.driver_id = :driverId and  dr.shipment_status_id= :statusId",
+			nativeQuery = true)
+	List<Shipment> queryBy(@Param("driverId") long driverId,
+						   @Param("statusId") long statusId);
 	 
 }

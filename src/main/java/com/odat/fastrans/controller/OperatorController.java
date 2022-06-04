@@ -5,13 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.odat.fastrans.dto.DriverDTO;
 import com.odat.fastrans.dto.ShipmentDTO;
@@ -19,7 +13,7 @@ import com.odat.fastrans.entity.Driver;
 import com.odat.fastrans.entity.Shipment;
 import com.odat.fastrans.service.OperatorService;
 import com.odat.fastrans.service.ShipmentService;
-
+import com.odat.fastrans.service.SupplierService;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -30,14 +24,11 @@ public class OperatorController {
 	
 	final private ShipmentService shipmentService;
 	final private OperatorService operatorService;
+	final private SupplierService supplierService;
 	
 	@GetMapping("/shipments")
-	public ResponseEntity<List<ShipmentDTO>> getShipmentxs(@RequestParam(name="status",required = true) long status) {
-		 try {
-			Thread.sleep(2000);
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
+	public ResponseEntity<List<ShipmentDTO>> getShipments(@RequestParam(name="status",required = true) long status) {
+
 		 
 		List<Shipment> shipments= shipmentService.getShipments(status);
 		
@@ -60,12 +51,17 @@ public class OperatorController {
 	}
 	
 	@PostMapping("/drivers/{driverId}/shipment/{shipmentId}/status/{shipmentStatusId}")
-	public ResponseEntity<Void> getDrivers(@PathVariable(name ="driverId" ) long driverId,@PathVariable(name ="shipmentId" ) long shipmentId,@PathVariable(name ="shipmentStatusId" ) long shipmentStatusId) {
-		 
+	public ResponseEntity<Void> getDrivers(@PathVariable(name ="driverId" ) long driverId,
+										   @PathVariable(name ="shipmentId" ) long shipmentId,
+										   @PathVariable(name ="shipmentStatusId" ) long shipmentStatusId) {
 		  operatorService.assignShipmentToDriver(driverId,shipmentId,shipmentStatusId);
-		 
-		 
 		return  new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 
+	@PatchMapping("/shipments/{shipmentId}/status/{shipmentStatusId}")
+	public ResponseEntity<Void> updateShipmentsStatus(@PathVariable(name ="shipmentId" ) long shipmentId,
+													  @PathVariable(name ="shipmentStatusId" ) long shipmentStatusId) {
+		shipmentService.updateShipmentsStatus(shipmentId,shipmentStatusId);
+		return  new ResponseEntity<Void>(HttpStatus.OK);
+	}
 }

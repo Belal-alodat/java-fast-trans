@@ -73,9 +73,6 @@ public class SupplierService {
 	public Supplier getSupplier() {
 
 		Optional<Supplier> s = supplierRepo.findByAccount(getAccount());
-		PackageDTO x = new PackageDTO();
-		x.setProduct(new ProductDTO());
-		x.setDimension(new DimensionDTO());
 		return s.get();
 	}
 	public Package savePackage(PackageDTO packageDTO) {
@@ -111,25 +108,7 @@ public class SupplierService {
 	}
 
 	
-	public  ShipmentDTO getShipment() {
-		ShipmentDTO shipmentDTO = new ShipmentDTO();
-		shipmentDTO.setPickupDate(Date.valueOf("2022-12-12"));
-		shipmentDTO.setPickupTime(Time.valueOf("12:12:12"));
-		int buildingNumber=1;
-		double longitude=1.1;
-		double latitude=1.1;
-		AddressDTO add =	new AddressDTO(1, new CityDTO(), new TownDTO(-1,""),
-				new VillageDTO(-1,""), 
-				"mobile","street",buildingNumber,
-				"fullName", latitude, longitude, /* false, */ false);
-		shipmentDTO.setFromAddress(add);
-		shipmentDTO.setToAddress(add);
-		PackageDTO packagedetails = new PackageDTO();
-		packagedetails.setDimension(new DimensionDTO());
-		packagedetails.setProduct(new ProductDTO());
-		shipmentDTO.setPackageDetails(packagedetails );
-		return shipmentDTO;
-	} 
+
 	
 	public  List<Shipment> getShipments() {
 		
@@ -169,7 +148,7 @@ public class SupplierService {
 		 
 		Package pakage = savePackage(null, shipmentDTO.getPackageDetails());
 		
-		Optional<ShipmentStatus> shipmentStatusOptional = shipmentStatusRepo.findById(1L);
+		Optional<ShipmentStatus> shipmentStatusOptional = shipmentStatusRepo.findById(0L);
 		if (shipmentStatusOptional.isEmpty()) {
 			throw new NoSuchElementException("shipmentStatus not found");
 		}
@@ -268,6 +247,29 @@ public class SupplierService {
 		 Supplier supplier =supplierOptinal.get();
 		return packageRepo.findAllBySupplier(supplier);
 	}
-	
-	
+
+
+
+
+
+	public  List<Shipment> getShipments(long status) {
+
+		Optional<Supplier> supplierOptinal = supplierRepo.findByAccount(getAccount());
+		if (supplierOptinal.isEmpty()) {
+			throw new NoSuchElementException("Supplier not found");
+		}
+
+		Supplier supplier = supplierOptinal.get();
+
+		Optional<ShipmentStatus> shipmentStatusOptional = shipmentStatusRepo.findById(status);
+		if (shipmentStatusOptional.isEmpty()) {
+			throw new NoSuchElementException("shipmentStatus not found");
+		}
+		ShipmentStatus shipmentStatus = shipmentStatusOptional.get();
+
+		Optional<List<Shipment>> shipmentsOptional = shipmentRepo.findAllBySupplierAndShipmentStatus(supplier,shipmentStatus);
+		List<Shipment> shipments= shipmentsOptional.get();
+
+		return shipments;
+	}
 }

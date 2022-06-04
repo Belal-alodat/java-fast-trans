@@ -84,10 +84,5 @@ public class UserController {
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}
 //http://localhost:8080/user/shipments
-	@GetMapping("/shipments")
-	public  ShipmentDTO getShipment() {
-		ShipmentDTO shipmentDTO = supplierService.getShipment();
-		return shipmentDTO;
-	} 
-	
+
 }
