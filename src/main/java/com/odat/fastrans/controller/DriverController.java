@@ -27,9 +27,9 @@ public class DriverController {
     final private DriverService driverService;
 
     @GetMapping("/shipments")
-    public ResponseEntity<List<ShipmentDTO>> getShipments(@RequestParam(name="status",required = true) long status) {
+    public ResponseEntity<List<ShipmentDTO>> getShipments(@RequestParam(name="status",required = true) String statusList) {
 
-        List<Shipment> shipments= driverService.getShipmentsByStatus(status);
+        List<Shipment> shipments= driverService.getShipmentsByStatus(statusList);
 
         List<ShipmentDTO> shipmentsDto = shipments.stream().map(
                 s -> new ShipmentDTO(s)
@@ -37,6 +37,8 @@ public class DriverController {
 
         return  new ResponseEntity<List<ShipmentDTO>>(shipmentsDto, HttpStatus.OK);
     }
+
+
 
     @PatchMapping ("/shipments/{shipmentId}/status/{shipmentStatusId}")
     public ResponseEntity<Void> updateShipmentsStatus(@PathVariable(name ="shipmentId" ) long shipmentId,
@@ -47,6 +49,14 @@ public class DriverController {
         return  new ResponseEntity<Void>(HttpStatus.OK);
     }
 
+    @PatchMapping ("/shipments/{shipmentId}/status/{shipmentStatusId}/to/{toShipmentStatusId}")
+    public ResponseEntity<Void> updateShipmentsStatus(@PathVariable(name ="shipmentId" ) long shipmentId
+                                                      ,@PathVariable(name ="shipmentStatusId" ) long shipmentStatusId
+                                                      ,@PathVariable(name ="toShipmentStatusId" ) long toShipmentStatusId) {
 
+        driverService.updateDriverShipment(shipmentId,shipmentStatusId,toShipmentStatusId);
+
+        return  new ResponseEntity<Void>(HttpStatus.OK);
+    }
 
 }
