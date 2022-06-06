@@ -77,10 +77,21 @@ public class SupplierController {
 	}
 
 	@GetMapping("/shipments")
-	public ResponseEntity<List<ShipmentDTO>> getShipments(@RequestParam(name="status",required = true) long status) {
+	public ResponseEntity<List<ShipmentDTO>> getShipments(@RequestParam(name="status",required = false) String status) {
+
+		List<Shipment>  shipments= supplierService.getShipments(status);
+
+		List<ShipmentDTO> shipmentsDto = shipments.stream().map(
+				s -> new ShipmentDTO(s)
+		).collect(Collectors.toList());
+
+		return  new ResponseEntity<List<ShipmentDTO>>(shipmentsDto,HttpStatus.OK);
+	}
 
 
-		List<Shipment> shipments= supplierService.getShipments(status);
+	public ResponseEntity<List<ShipmentDTO>> XgetShipments(@RequestParam(name="status",required = false) long status) {
+
+		List<Shipment>  shipments= supplierService.getShipments(status);
 
 		List<ShipmentDTO> shipmentsDto = shipments.stream().map(
 				s -> new ShipmentDTO(s)

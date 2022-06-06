@@ -2,10 +2,13 @@ package com.odat.fastrans.service;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import com.odat.fastrans.entity.*;
+import com.odat.fastrans.entity.Package;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,17 +23,6 @@ import com.odat.fastrans.dto.ShipmentDTO;
 import com.odat.fastrans.dto.SupplierDTO;
 import com.odat.fastrans.dto.TownDTO;
 import com.odat.fastrans.dto.VillageDTO;
-import com.odat.fastrans.entity.Account;
-import com.odat.fastrans.entity.Address;
-import com.odat.fastrans.entity.City;
-import com.odat.fastrans.entity.Dimension;
-import com.odat.fastrans.entity.Package;
-import com.odat.fastrans.entity.Product;
-import com.odat.fastrans.entity.Shipment;
-import com.odat.fastrans.entity.ShipmentStatus;
-import com.odat.fastrans.entity.Supplier;
-import com.odat.fastrans.entity.Town;
-import com.odat.fastrans.entity.Village;
 import com.odat.fastrans.repo.AccountRepo;
 import com.odat.fastrans.repo.AddressRepo;
 import com.odat.fastrans.repo.CityRepo;
@@ -120,9 +112,26 @@ public class SupplierService {
 		List<Shipment> shipments= shipmentsOptional.get();
 		
 	 return shipments;
-	} 
-	
-	
+	}
+
+
+	public  List<Shipment> getShipments(String statusId) {
+
+		String [] a = statusId.split(",");
+		List<String> statusList =   Arrays.asList(a);
+		Optional<Supplier> supplierOptinal = supplierRepo.findByAccount(getAccount());
+		if (supplierOptinal.isEmpty()) {
+			throw new NoSuchElementException("Supplier not found");
+		}
+		Supplier supplier =  supplierOptinal.get();
+		 List<Shipment>  shipments = shipmentRepo.findAllBySupplierAndShipmentStatuses(supplier.getId(),statusList);
+
+
+		return shipments;
+	}
+
+
+
 	public List<Address> getAddressBySupplierAndFromAddress (boolean isFromAddress) {
 		
 		Optional<Supplier> supplierOptinal = supplierRepo.findByAccount(getAccount());

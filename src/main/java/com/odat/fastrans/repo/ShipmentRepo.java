@@ -29,6 +29,13 @@ public interface ShipmentRepo  extends JpaRepository<Shipment, Long>{
 						   @Param("statusList")  List<String>   statusList);
 
 
+	@Query(value = "SELECT * FROM shipment WHERE supplier_id = :customerId " +
+			"and shipment_status_id in (:statusList )",
+			nativeQuery = true)
+	List<Shipment> findAllBySupplierAndShipmentStatuses(@Param("customerId") long customerId,
+						   @Param("statusList")  List<String>   statusList);
+
+
 	@Query(value = "select sh.* FROM  shipment as sh  ,  driver_shipment  as dr " +
 			"where sh.id = dr.shipment_id and  sh.shipment_status_id=dr.shipment_status_id" +
 			" and  dr.driver_id = :driverId and  dr.shipment_status_id in( "
