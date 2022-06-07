@@ -4,6 +4,7 @@ package com.odat.fastrans.security;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import com.odat.fastrans.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,10 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeHttpRequests()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/user/**").hasRole("USER")
-                .antMatchers("/suppliers/**").hasRole("SUPPLIER")
-                .antMatchers("/drivers/**").hasRole("DRIVER")
-                .antMatchers("/operators/**").hasRole("OPERATOR")
+                .antMatchers("/customers/**").hasRole(Constants.CUSTOMER_ROLE)
+                .antMatchers("/drivers/**").hasRole(Constants.DRIVER_ROLE)
+                .antMatchers("/operators/**").hasRole(Constants.OPERATOR_ROLE)
                 .and()
                .userDetailsService(uds)
                 .exceptionHandling()

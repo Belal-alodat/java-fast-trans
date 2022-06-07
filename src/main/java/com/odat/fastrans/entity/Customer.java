@@ -17,20 +17,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Entity
-public class Supplier {
+public class Customer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	@OneToOne
 	private Account account; 
 	@OneToMany(
-		    mappedBy = "supplier",
+		    mappedBy = "customer",
 		    cascade = CascadeType.ALL,
 		    orphanRemoval = true
 		)
 	@JsonIgnore
 	private List<Shipment> shipments;
-	public Supplier(Account account) {
+	public Customer(Account account) {
 		super();
 		this.account = account;
 		 

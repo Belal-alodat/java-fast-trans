@@ -13,7 +13,7 @@ import com.odat.fastrans.entity.Driver;
 import com.odat.fastrans.entity.Shipment;
 import com.odat.fastrans.service.OperatorService;
 import com.odat.fastrans.service.ShipmentService;
-import com.odat.fastrans.service.SupplierService;
+import com.odat.fastrans.service.CustomerService;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -24,7 +24,7 @@ public class OperatorController {
 	
 	final private ShipmentService shipmentService;
 	final private OperatorService operatorService;
-	final private SupplierService supplierService;
+	final private CustomerService customerService;
 	
 	@GetMapping("/shipments")
 	public ResponseEntity<List<ShipmentDTO>> getShipments(@RequestParam(name="status",required = true) long status) {

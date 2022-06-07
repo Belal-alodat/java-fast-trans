@@ -3,6 +3,7 @@ package com.odat.fastrans.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import com.odat.fastrans.repo.VillageRepo;
 @RestController
 @RequestMapping("/lookups")
 @CrossOrigin
+@AllArgsConstructor
 public class LookupsController {
 	
 private final VillageRepo villageRepo;
@@ -39,19 +41,7 @@ private final DimensionRepo dimensionRepo;
 
 	
 	
-	public LookupsController(AccountRepo accountRepo,AddressRepo addressRepo,
-			CityRepo cityRepo,TownRepo townRepo,VillageRepo villageRepo
-			,ProductRepo productRepo, DimensionRepo dimensionRep) {
-		super();
-		this.villageRepo = villageRepo;
-		this.townRepo = townRepo;
-		this.cityRepo=cityRepo;
-		this.addressRepo=addressRepo;
-		this.accountRepo=accountRepo;
-		this.productRepo = productRepo;
-		this.dimensionRepo = dimensionRep;
-	
-	}
+
 	@GetMapping("/villages")
 	public ResponseEntity<List<Village>> getVillages(){
 		return ResponseEntity.ok(villageRepo.findAll());
@@ -81,11 +71,6 @@ private final DimensionRepo dimensionRepo;
 	
 	@PostMapping("/addresses")
 	public ResponseEntity<Void> postAddresses(@RequestBody List<Address> addresses){
-		/*
-		 for(City city: addresses) { 
-		 	Town.assignCitieٌs(city);
-		  }
-		 */
 		addressRepo.saveAll(addresses);
 		return new ResponseEntity<Void>( HttpStatus.CREATED );
 	}
@@ -127,21 +112,5 @@ private final DimensionRepo dimensionRepo;
 		return new ResponseEntity<Void>( HttpStatus.CREATED );
 	}
 	
-	@GetMapping("/town")
-	public ResponseEntity<Town> gettown(){
-		List<Village> villages = new ArrayList<Village>();
-		Town t=	new Town("xtca","xxtcd",villages,null);
-		Village v=	new Village("xvass","xvd",t);
-		villages.add(v);
-		townRepo.save(t);
-		return ResponseEntity.ok(t);
-	}
-	
-	
-	@GetMapping("/vi")
-	public ResponseEntity<Village> getVillage(){
-		Village v=	new Village("a","d",null);
-		villageRepo.save(v);
-		return ResponseEntity.ok(v);
-	}
+
 }

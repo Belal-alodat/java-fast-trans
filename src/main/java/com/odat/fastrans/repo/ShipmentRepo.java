@@ -8,16 +8,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.odat.fastrans.entity.Shipment;
 import com.odat.fastrans.entity.ShipmentStatus;
-import com.odat.fastrans.entity.Supplier;
+import com.odat.fastrans.entity.Customer;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ShipmentRepo  extends JpaRepository<Shipment, Long>{
 	
-	public Optional<List<Shipment>> findAllBySupplier(Supplier supplier);
+	public Optional<List<Shipment>> findAllByCustomer(Customer customer);
 	public Optional<List<Shipment>> findAllByShipmentStatus(ShipmentStatus shipmentStatus);
-	public Optional<List<Shipment>> findAllBySupplierAndShipmentStatus(Supplier supplier,ShipmentStatus shipmentStatus);
-	//public Optional<List<Shipment>> findAllBySupplierAndShipmentStatus(Supplier supplier,ShipmentStatus shipmentStatus);
+	public Optional<List<Shipment>> findAllByCustomerAndShipmentStatus(Customer customer, ShipmentStatus shipmentStatus);
 
 
 
@@ -29,11 +28,11 @@ public interface ShipmentRepo  extends JpaRepository<Shipment, Long>{
 						   @Param("statusList")  List<String>   statusList);
 
 
-	@Query(value = "SELECT * FROM shipment WHERE supplier_id = :customerId " +
+	@Query(value = "SELECT * FROM shipment WHERE customer_id = :customerId " +
 			"and shipment_status_id in (:statusList )",
 			nativeQuery = true)
-	List<Shipment> findAllBySupplierAndShipmentStatuses(@Param("customerId") long customerId,
-						   @Param("statusList")  List<String>   statusList);
+	List<Shipment> findAllByCustomerAndShipmentStatuses(@Param("customerId") long customerId,
+														@Param("statusList")  List<String>   statusList);
 
 
 	@Query(value = "select sh.* FROM  shipment as sh  ,  driver_shipment  as dr " +

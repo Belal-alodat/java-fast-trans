@@ -20,9 +20,9 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Shipment {
 	
-	public Shipment(Supplier supplier,Address fromAddress, Address toAddress, Date pickupDate,
-			Time pickupTime, Package pakage,ShipmentStatus shipmentStatus) {
-		this.supplier=supplier;
+	public Shipment(Customer customer, Address fromAddress, Address toAddress, Date pickupDate,
+					Time pickupTime, Package pakage, ShipmentStatus shipmentStatus) {
+		this.customer = customer;
 		this.fromAddress = fromAddress;
 		this.toAddress = toAddress;
 		this.pickupDate = pickupDate;
@@ -47,6 +47,6 @@ public class Shipment {
 	private ShipmentStatus shipmentStatus;
 	@ManyToOne
 	@JsonIgnore
-	private Supplier supplier;
+	private Customer customer;
 
 }

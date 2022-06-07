@@ -2,19 +2,15 @@ package com.odat.fastrans.controller;
 
 import com.odat.fastrans.dto.ShipmentDTO;
 import com.odat.fastrans.entity.Shipment;
-import com.odat.fastrans.entity.ShipmentStatus;
 import com.odat.fastrans.service.DriverService;
 import com.odat.fastrans.service.OperatorService;
 import com.odat.fastrans.service.ShipmentService;
-import com.odat.fastrans.service.SupplierService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController

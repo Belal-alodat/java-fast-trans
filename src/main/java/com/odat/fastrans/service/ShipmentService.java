@@ -1,25 +1,13 @@
 package com.odat.fastrans.service;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import com.odat.fastrans.entity.*;
 import com.odat.fastrans.repo.*;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import com.odat.fastrans.dto.AddressDTO;
-import com.odat.fastrans.dto.CityDTO;
-import com.odat.fastrans.dto.DimensionDTO;
-import com.odat.fastrans.dto.PackageDTO;
-import com.odat.fastrans.dto.ProductDTO;
-import com.odat.fastrans.dto.ShipmentDTO;
-import com.odat.fastrans.dto.TownDTO;
-import com.odat.fastrans.dto.VillageDTO;
 
 import lombok.AllArgsConstructor;
 
@@ -28,7 +16,7 @@ import lombok.AllArgsConstructor;
 public class ShipmentService {
 
 	final private AccountRepo accountRepo;
-	final private SupplierRepo supplierRepo;
+	final private CustomerRepo customerRepo;
 	final private DriverRepo driverRepo;
 	final private ProductRepo productRepo;
 	final private DimensionRepo dimensionRepo;

@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 @NoArgsConstructor
@@ -28,7 +26,7 @@ public class Package {
 	private int pieces;
 	 
 	@ManyToOne
-	private Supplier supplier;
+	private Customer customer;
 	public Package(Product product, Dimension dimension, double totalPrice,double weight,int pieces) {
 		super();
 		this.product = product;

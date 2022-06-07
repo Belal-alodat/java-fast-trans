@@ -17,7 +17,7 @@ import java.util.Optional;
 public class DriverService {
 
     final private AccountRepo accountRepo;
-    final private SupplierRepo supplierRepo;
+    final private CustomerRepo customerRepo;
     final private DriverRepo driverRepo;
     final private ProductRepo productRepo;
     final private DimensionRepo dimensionRepo;
